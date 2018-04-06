@@ -55,7 +55,6 @@ print("Hello" + number) # OUTPUT: Hello%number%
 # Python中仅会人为大写变量名当作常量
 # =================
 
-
 # ##### Types #####
 """
 print('"Hello World!"') # OUTPUT："Hello World!"
@@ -446,3 +445,82 @@ for num in fib(3):
 
 # -------------------------------------------------------------------------------------
 
+# ==================================
+# ----- Funcitonal Programming -----
+# ==================================
+
+# ===== Notes =====
+# map(f, l): 将f作用于l上
+# reduce(f, l): 依次调用f，最终返回一个值
+#
+# 偏函数用于设定参数默认值
+# =================
+
+# ##### High-order Function #####
+"""
+from functools import reduce
+print(list(map(abs, [-4, 7, -8, 2, -5, 1]))) # OUTPUT: [4, 7, 8, 2, 5, 1]
+print(reduce(min, [4, 7, 8, 2, 5, 1])) # OUTPUT: 1
+
+def N():
+    n = 1
+    while True:
+        n += 2
+        yield n
+
+def F(x):
+    return lambda x: x % n > 0
+
+def R():
+    yield 2
+
+    it = N()
+    while True:
+        n = next(it)
+        yield n
+        it = filter(F(n), it)
+
+for n in R():
+    if n < 20:
+        print(n)
+    else:
+        break
+"""
+
+# ##### Closure #####
+"""
+def lazySum(a, b):
+    def sum(x):
+        return a*x+b
+    return sum
+f = lazySum(1, 2)
+print(f(3)) # OUTPUT: 5
+"""
+
+# ##### Lambda #####
+"""
+f = lambda x : x * x
+print(f(3)) # OUTPUT: 9
+"""
+
+# ##### Decorator #####
+"""
+def log(func):
+    def wrapper(*args, **kw):
+        print("%s" % func.__name__)
+        return func(*args, **kw)
+    return wrapper
+
+@log
+def function():
+    print("2018-4-6")
+
+function()
+"""
+
+# ###### Partial #####
+import functools
+int2 = functools.partial(int, base=2)
+print(int2("10101010"))
+
+# -------------------------------------------------------------------------------------

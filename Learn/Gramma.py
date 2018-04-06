@@ -381,3 +381,68 @@ keyWordValue(Vicent=1, Chen=3) # OUTPUT: {'Vicent': 1, 'Chen': 3}
 # print(printHello("10")) # OUTPUT: TypeError: num must be int
 # keyWordValue("Vicent", 1, "Chen", 3) # OUTPUT: TypeError: keyWordValue() takes 0 positional arguments but 4 were given
 # keyWordValue("Vicent"=1, "Chen"=3) # OUTPUT: SyntaxError: keyword can't be an expression
+
+# -------------------------------------------------------------------------------------
+
+# ====================
+# ----- Features -----
+# ====================
+
+# ===== Notes =====
+# Slicing末端参数不会被访问
+# 字符串亦可被切片
+# 
+# enumerate()返回可迭代元素的索引与值
+#
+# 列表生成器理解为循环
+#
+# 生成器不一次性计算所有值，在访问时才进行计算
+# yield会将函数停止在当前位置
+# =================
+
+# ##### Slicing #####
+"""
+print(["Vicent", "_", "Chen", "@", "yeah.net"][0:]) # OUTPUT: ['Vicent', '_', 'Chen', '@', 'yeah.net']
+print(["Vicent", "_", "Chen", "@", "yeah.net"][0:3]) # OUTPUT: ['Vicent', '_', 'Chen']
+print(["Vicent", "_", "Chen", "@", "yeah.net"][-5:-2]) # OUTPUT: ['Vicent', '_', 'Chen']
+print("Vicent_Chen@yeah.net"[:11]) # OUTPUT: Vicent_Chen
+"""
+# ##### Iteration #####
+"""
+for index, value in enumerate(["A", "B", "C"]):
+    print(index, ":", value) # OUTPUT: %index% : %value%
+"""
+
+# ##### List Generator #####
+"""
+print([x*x for x in range(10)]) # OUTPUT: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+# OUTPUT: [0, 0, 0, 0, 0, 2, 6, 10, 14, 18, 4, 12, 20, 28, 36, 6, 18, 30, 42, 54, 8, 24, 40, 56, 72]
+print([x*y for x in range(10) if x % 2 == 0 for y in range(10) if y % 2 != 0])
+"""
+# ##### Generator #####
+"""
+g = (x*x for x in range(3))
+for i in range(3):
+    print(next(g)) # OUTPUT: %i*i%
+ng = (x*x for x in range(3))
+for i in ng:
+    print(i) # OUTPUT: %i*i%
+
+def fib(max):
+    n, a, b = 0, 1, 1
+    while n < max:
+        yield b
+        a, b = b, a + b
+        n += 1
+for num in fib(3):
+    print(num) # OUTPUT: 1\n 2\n 3
+"""
+
+# ##### Iterator #####
+# ignore
+
+# ##### Errrors #####
+# print(next(g)) # OUTPUT: StopIteration
+
+# -------------------------------------------------------------------------------------
+

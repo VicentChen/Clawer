@@ -532,8 +532,98 @@ print(int2("10101010"))
 # ==================================
 
 # ===== Notes =====
-# 正常函数名与变量为public, __xxx__为特殊变量, _xxx/__xxx为private
 # =================
 
 # -------------------------------------------------------------------------------------
 
+# =======================================
+# ----- Object Oriented Programming -----
+# =======================================
+
+# ===== Notes =====
+# 所有类继承自Object类
+# 类中的方法会自动传入self
+# 正常函数名与变量为public, __xxx__为特殊变量, _xxx/__xxx为private
+# 实例的变量名如果以__开头，就变成了一个私有变量(private)
+# 实例的变量名如果以_开头，提示用户将其当作私有变量
+# 私有变量仍然可以访问 obj._Clz__privateVar
+# 
+# dir() 可用于获取对象的所有属性和方法
+#
+# 不使用self为属性赋值即为类属性
+# =================
+
+# ##### Class ######
+"""
+class Student(object):
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+        self.__privateVar = 100.0
+    
+    def printScore(self):
+        print(self.name, self.score)
+    
+    def printPrivate(self):
+        print(self.name, self.score, self.__privateVar)
+
+student = Student("Vicent_Chen", 100)
+print(student.name, student.score) # OUTPUT: Vicent_Chen 100
+student.printScore() # OUTPUT: Vicent_Chen 100
+student.printPrivate() # OUTPUT: Vicent_Chen 100 100.0
+print(student._Student__privateVar) # OUTPUT: 100.0
+"""
+
+# ##### Inheritance #####
+"""
+class Clazz():
+    def toString(self):
+        print("Origin Class")
+class GoodClass(Clazz):
+    def toString(self):
+        print("Good Class")
+goodClass = GoodClass()
+goodClass.toString() # OUTPUT: Good Class
+"""
+
+# ##### Access #####
+"""
+class People(object):
+    pass
+class Student(People):
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+        self.__privateVar = 100.0
+    def toString(self):
+        print(self.name, self.score)
+    def toStringWithPrivate(self):
+        print(self.name, self.score, self.__privateVar)
+student = Student("Vicent_Chen", 100)
+print(type(1234)) # OUTPUT: <class 'int'>
+print(type(student)) # OUTPUT: <class '__main__.Student'>
+print(type(student) == Student) # OUTPUT: True
+print(dir(student)) # OUTPUT: ['_Student__privateVar', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'name', 'score', 'toString', 'toStringWithPrivate']
+
+print(hasattr(student, "NO")) # OUTPUT: False
+setattr(student, "NO", "NO")
+print(hasattr(student, "NO")) # OUTPUT: True
+print(getattr(student, "NO")) # OUTPUT: NO
+"""
+
+# ##### Property #####
+class Student(object):
+    name = "Student"
+student = Student()
+print(Student.name) # OUTPUT: Student
+print(student.name) # OUTPUT: Student
+student.name = "Vicent"
+print(Student.name) # OUTPUT: Student
+print(student.name) # OUTPUT: Vicent
+Student.name = "Chen"
+print(Student.name) # OUTPUT: Student
+print(student.name) # OUTPUT: Vicent
+
+# ##### Errors #####
+# print(student.__privateVar) # OUTPUT: AttributeError: 'Student' object has no attribute '__privateVar'
+# print(student.NoSuch) # OUTPUT: AttributeError: 'Student' object has no attribute 'NoSuch'

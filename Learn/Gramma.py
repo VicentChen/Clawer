@@ -551,6 +551,9 @@ print(int2("10101010"))
 # dir() 可用于获取对象的所有属性和方法
 #
 # 不使用self为属性赋值即为类属性
+# 类属性与对象属性名字相同时，对象属性覆盖类属性
+#
+# 为一个实例绑定的对象和方法对另一个实例不起作用
 # =================
 
 # ##### Class ######
@@ -612,6 +615,7 @@ print(getattr(student, "NO")) # OUTPUT: NO
 """
 
 # ##### Property #####
+"""
 class Student(object):
     name = "Student"
 student = Student()
@@ -621,9 +625,207 @@ student.name = "Vicent"
 print(Student.name) # OUTPUT: Student
 print(student.name) # OUTPUT: Vicent
 Student.name = "Chen"
-print(Student.name) # OUTPUT: Student
+print(Student.name) # OUTPUT: Chen
 print(student.name) # OUTPUT: Vicent
+"""
 
 # ##### Errors #####
 # print(student.__privateVar) # OUTPUT: AttributeError: 'Student' object has no attribute '__privateVar'
 # print(student.NoSuch) # OUTPUT: AttributeError: 'Student' object has no attribute 'NoSuch'
+
+# -------------------------------------------------------------------------------------
+
+# ===============================================
+# ----- Advance Object Oriented Programming -----
+# ===============================================
+
+# ===== Notes =====
+# __slots__用于限制能够添加至类中的属性
+# __slots__对继承的子类不起作用
+# 若子类中亦有__slots__语句，子类可添加的属性=父类可添加属性+语句中规定属性
+#
+# @property 将方法变成属性进行使用(此方法为getter)
+# @%name%.setter 为转变后的属性的setter
+# 事实上%name%应为有@property装饰器的方法的名字，实际get/set的属性可以不为score
+#
+# __str__()输出用户字符串，__repr__()输出程序开发者字符串
+#
+# __getattr__()仅在未找到属性时调用
+#
+# __call__()用于调用实例方法
+# 
+# type() 可用于获取类型，也可用于创建新的类型
+#
+# MetaClass总以MetaClass结尾以表示其为MetaClass
+# =================
+
+# ##### __slots__ #####
+"""
+class People(object):
+    __slots__ = ("ID")
+class Student(People):
+    __slots__ = ("name", "age")
+    pass
+class Primary(Student):
+    pass
+student = Student()
+student.ID = "123456"
+primary = Primary()
+primary.GG = "GG"
+"""
+
+# ##### @property #####
+"""
+class Student(object):
+    @property
+    def score(self):
+        return self.__gg
+    
+    @score.setter
+    def score(self, score):
+        self.__gg = score
+
+student = Student()
+student.score = 1000
+print(student.score) # OUTPUT: 
+"""
+# ##### Multi-Inherit #####
+# ignore
+
+# ##### Customize #####
+"""
+class Student(object):
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return self.name
+    __repr__ = __str__
+    def __iter__(self):
+        return self
+    def __getattr__(self, attr):
+        return 100
+    def __call__(self):
+        print("Hello" + self.name)
+print(Student("Vicent_Chen")) # OUTPUT: Vicent_Chen
+print(getattr(Student("Vicent"), "name")) # OUTPUT: 100
+print(getattr(Student("Vicent"), "score")) # OUTPUT: 100
+Student("Vicent_Chen")() # OUTPUT: HelloVicent_Chen
+
+class Fib(object):
+    def __init__(self):
+        self.a, self.b = 0, 1
+    def __iter__(self):
+        return self
+    def __next__(self):
+        self.a, self.b = self.b, self.a + self.b
+        if (self.a > 1000):
+            raise StopIteration("A > 1000")
+        return self.a
+    def __getitem__(self, n):
+        if isinstance(n, slice):
+            start, stop = n.start, n.stop
+            a, b = 0, 1
+            L = []
+            for i in range(n.start):
+                a, b = b, a + b
+            for i in range(n.stop - n.start):
+                L.append(a)
+                a, b = b, a + b
+            return L
+
+        if isinstance(n, int):
+            a, b = 0, 1
+            for x in range(n):
+                a, b = b, a + b
+            return a
+
+for num in Fib():
+    print(num) # OUTPUT is Fib array
+print(Fib()[10]) # OUTPUT: 55
+print(Fib()[1:5]) # OUTPUT: 
+"""
+
+# ##### Enumrate #####
+"""
+from enum import Enum
+Month = Enum('Month', ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+print(Month.Apr) # OUTPUT: Month.Apr
+print(Month.Apr.value) # OUTPUT: 4
+for name, member in Month.__members__.items():
+    print(name, "=>", member, ",", member.value)
+"""
+
+# ##### Meta Class #####
+def f(self, name="World"):
+    print("Hello", name)
+Hello = type("Hello", (object, ), dict(hello=f))
+Hello().hello() # OUTPUT: Hello World
+print(type(Hello)) # OUTPUT: <class 'type'>
+print(type(Hello())) # OUTPUT: <class '__main__.Hello'>
+
+class Field(object):
+    def __init__(self, name, columnType):
+        self.name = name
+        self.columnType = columnType
+    def __str__(self):
+        return "<%s:%s>" % (self.__class__.__name__, self.name)
+
+class StringField(Field):
+    def __init__(self, name):
+        super(StringField, self).__init__(name, "varchar(100)")
+class IntegerField(Field):
+    def __init__(self, name):
+        super(IntegerField, self).__init__(name, "bigint")
+
+class ModelMetaClass(type):
+    def __new__(cls, name, bases, attrs):
+        if name=="Model":
+            return type.__new__(cls, name, bases, attrs)
+        print("Found model : %s" % name)
+        mappings = dict()
+        for k, v in attrs.items():
+            if isinstance(v, Field):
+                print("Found mapping: %s ==> %s" % (k, v))
+                mappings[k] = v
+        for k in mappings.keys():
+            attrs.pop(k)
+        attrs["__mappings__"] = mappings
+        attrs["__table__"] = name
+        return type.__new__(cls, name, bases, attrs)
+
+class Model(dict, metaclass = ModelMetaClass):
+    def __init__(self, **kw):
+        super(Model, self).__init__(**kw)
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+    def __setattr__(self, key, value):
+        self[key] = value;
+    def save(self):
+        fields = []
+        params = []
+        args = []
+        for k, v in self.__mappings__.items():
+            fields.append(v.name)
+            params.append("?")
+            args.append(getattr(self, k, None))
+        sql = "INSERT INTO %s (%s) values (%s)" % (self.__table__, ",".join(fields), ",".join(params))
+        print("SQL: %s" % sql)
+        print("ARGS: %s" % str(args))
+
+class User(Model):
+    id = IntegerField('id')
+    name = StringField('username')
+    email = StringField('email')
+    password = StringField('password')
+
+u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
+u.save()
+
+# ##### Errors #####
+# student.score = 100 # OUTPUT: AttributeError: 'Student' object has no attribute 'score'
+
+# -------------------------------------------------------------------------------------
+

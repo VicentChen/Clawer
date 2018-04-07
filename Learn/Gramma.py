@@ -1031,14 +1031,53 @@ t2.join()
 # =================
 
 # ##### MySQL #####
+"""
 import mysql.connector
 
 # TODO: change info
-conn = mysql.connector.connect(user="root", password="Vicent960829", database="dull_ip_pool")
+conn = mysql.connector.connect(user="username, password="password", database="databasename")
 cursor = conn.cursor()
-cursor.execute("SELECT * FROM user_agent")
+cursor.execute("SELECT * FROM tablename")
 values = cursor.fetchall()
 print(len(values))
 conn.commit()
 cursor.close()
 conn.close()
+"""
+
+# -------------------------------------------------------------------------------------
+
+# ====================
+# ----- Async IO -----
+# ====================
+
+# ===== Notes =====
+# =================
+
+# ##### Coroutine #####
+"""
+def consumer():
+    r = ''
+    while True:
+        n = yield r
+        if not n:
+            return
+        print('[CONSUMER] Consuming %s...' % n)
+        r = '200 OK'
+
+def produce(c):
+    c.send(None)
+    n = 0
+    while n < 5:
+        n = n + 1
+        print('[PRODUCER] Producing %s...' % n)
+        r = c.send(n)
+        print('[PRODUCER] Consumer return: %s' % r)
+    c.close()
+
+c = consumer()
+produce(c)
+"""
+
+# -------------------------------------------------------------------------------------
+# Finished, will not update.

@@ -1005,6 +1005,7 @@ print(count) # OUTPUT: 20000
 """
 
 # ##### ThreadLocal #####
+"""
 import threading
 localVar = threading.local()
 
@@ -1018,6 +1019,26 @@ t1.start() # OUTPUT: ThreadA Vicent
 t2.start() # OUTPUT: ThreadB Chen
 t1.join()
 t2.join()
+"""
 
 # -------------------------------------------------------------------------------------
 
+# ====================
+# ----- Database -----
+# ====================
+
+# ===== Notes =====
+# =================
+
+# ##### MySQL #####
+import mysql.connector
+
+# TODO: change info
+conn = mysql.connector.connect(user="root", password="Vicent960829", database="dull_ip_pool")
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM user_agent")
+values = cursor.fetchall()
+print(len(values))
+conn.commit()
+cursor.close()
+conn.close()

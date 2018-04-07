@@ -893,6 +893,7 @@ print([x for x in os.listdir(".") if os.path.isfile(x)]) # OUTPUT: ['.gitignore'
 """
 
 # ##### Serialize #####
+"""
 import pickle
 obj = dict(name="Vicent", age=20, score=38)
 print(pickle.dumps(obj)) # OUTPUT: b'\x80\x03}q\x00(X\x04\x00\x00\x00nameq\x01X\x06\x00\x00\x00Vicentq\x02X\x03\x00\x00\x00ageq\x03K\x14X\x05\x00\x00\x00scoreq\x04K&u.'
@@ -913,10 +914,110 @@ print(json.dumps(student, default=lambda obj: obj.__dict__)) # OUTPUT: {"name": 
 def dict2Student(d):
     return Student(d["name"], d["age"], d["friends"])
 print(json.loads('{"name": "Vicent_Chen", "age": 100, "friends": ["V", "Vic", "Vicent"]}', object_hook=dict2Student)) # OUTPUT: <__main__.Student object at 0x05E97D50>
+"""
 
 # ##### Errors #####
 # file = open("../Readme.md", "r")  # OUTPUT: FileNotFoundError: [Errno 2] No such file or directory: '../Readme.md'
 # print(os.uname()) # OUTPUT: AttributeError: module 'os' has no attribute 'uname'
+
+# -------------------------------------------------------------------------------------
+
+# ==============================
+# ----- Process and Thread -----
+# ==============================
+
+# ===== Notes =====
+# fork()仅在类UNIX下生效
+# 推测Python多进程会将当前进程完全复制并运行
+# Pool在join()之前必须close()
+# queue可用于进程间通信
+# =================
+
+# ##### MultiProcessing #####
+"""
+from multiprocessing import Process
+import os
+# print("Process %s" % os.getpid()) # OUTPUT: Process 12548 / Process 38092
+# 
+# def runProcess(name):
+#     print("Child Process %s - %s" % (name, os.getpid())) # OUTPUT: Child Process child-1 - 38092
+# 
+# if __name__ == "__main__":
+#     print("Parent Process Parent - %s" % os.getpid()) # OUTPUT: Parent Process Parent - 12548
+#     p = Process(target=runProcess, args=("child",))
+#     p.start()
+#     p.join()
+
+from multiprocessing import Pool
+import time, random
+
+def longProcess(name):
+    print("Child Process %s - %s" % (name, os.getpid())) # OUTPUT: Child Process %name% - %pid%
+    start = time.time()
+    time.sleep(random.random() * 3)
+    end = time.time()
+    print("Child Process %s - %s : %0.2fs" % (name, os.getpid(), end - start)) # OUTPUT: Child Process %name% - %pid% : %time%
+
+if __name__ == "__main__":
+    print("Parent Process Parent - %s" % os.getpid()) # OUTPUT: Parent Process Parent - %pid%
+    p = Pool(4)
+    for i in range(5):
+        p.apply_async(longProcess, args=(i,))
+    p.close()
+    p.join()
+
+import subprocess
+print(subprocess.call(["nslookup", "www.baidu.com"])) # OUTPUT: 0
+
+# ignore queue
+"""
+
+# ##### MultiThread #####
+"""
+import time, threading
+def loop():
+    print("Thread %s" % threading.current_thread().name) # OUTPUT: Thread LoopThread
+    for i in range(5):
+        print("Thread %s >> %d" % (threading.current_thread().name, i)) # OUTPUT is loop
+print("Thread %s" % threading.current_thread().name) # OUTPUT: Thread MainThread
+thread = threading.Thread(target=loop, name="LoopThread")
+thread.start()
+thread.join()
+
+count = 0
+lock = threading.Lock()
+def lockThread():
+    for i in range(10000):
+        lock.acquire()
+        try:
+            global count
+            count = count + 1
+        finally:
+            lock.release()
+thread1 = threading.Thread(target=lockThread)
+thread2 = threading.Thread(target=lockThread)
+thread1.start()
+thread2.start()
+thread1.join()
+thread2.join()
+
+print(count) # OUTPUT: 20000
+"""
+
+# ##### ThreadLocal #####
+import threading
+localVar = threading.local()
+
+def threadF(name):
+    localVar.student = name
+    print("%s %s" % (threading.current_thread().name, name))
+
+t1 = threading.Thread(target=threadF, args=("Vicent",), name="ThreadA")
+t2 = threading.Thread(target=threadF, args=("Chen",), name="ThreadB")
+t1.start() # OUTPUT: ThreadA Vicent
+t2.start() # OUTPUT: ThreadB Chen
+t1.join()
+t2.join()
 
 # -------------------------------------------------------------------------------------
 

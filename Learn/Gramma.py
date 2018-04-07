@@ -756,6 +756,7 @@ for name, member in Month.__members__.items():
 """
 
 # ##### Meta Class #####
+"""
 def f(self, name="World"):
     print("Hello", name)
 Hello = type("Hello", (object, ), dict(hello=f))
@@ -823,9 +824,99 @@ class User(Model):
 
 u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
 u.save()
+"""
 
 # ##### Errors #####
 # student.score = 100 # OUTPUT: AttributeError: 'Student' object has no attribute 'score'
+
+# -------------------------------------------------------------------------------------
+
+# ==============
+# ----- IO -----
+# ==============
+
+# ===== Notes =====
+# VSCode下Python文件运行于.vscode同级目录下
+#
+# StringIO用于在内存中写字符串
+# BytesIO 用于在内存中操作Bytes
+#
+# uname()函数在Windows上不提供
+# os模块相关
+# os.path.join()可正确处理不同操作系统的路径分隔符
+# shutil提供copyfile()函数
+#
+# 序列化：把变量从内存中编程可存储或传输的过程
+# Python中的序列化依赖于方法实现
+# =================
+
+# ##### File #####
+"""
+try:
+    file = open("Readme.md", "r", encoding="utf-8")
+    print(file.read()) # OUTPUT is content in Readme.md
+finally:
+    file.close()
+
+with open("Readme.md", "r", encoding="utf-8") as file:
+    print(file.read()) # OUTPUT is content in Readme.md
+
+# ignore binary read, wirte and text write
+"""
+
+# ##### StringIO and BytesIO #####
+"""
+from io import StringIO
+str = StringIO()
+print(str.write("Hello")) # OUTPUT: 5
+print(str.write(" World!")) # OUTPUT: 7 
+print(str.getvalue()) # OUTPUT: Hello World!
+
+str = StringIO("Hello \n World! \n")
+for line in str.readlines():
+    print(line.strip())
+
+# ignore BytesIO
+"""
+
+# ##### File and Directory #####
+"""
+import os
+print(os.name) # OUTPUT: "nt"
+print(os.environ) # OUTPUT is all environments in dict(?)
+print(os.path.abspath(".")) # OUTPUT is current absolute path of %Clawer%
+print(os.path.join(".", "osTest")) # OUTPUT: .\osTest
+print(os.path.splitext("C:\\path\\to\\osTest.text")) # OUTPUT: ('C:\\path\\to\\osTest', '.text')
+
+print([x for x in os.listdir(".") if os.path.isdir(x)]) # OUTPUT: ['.git', '.vscode', 'Learn']
+print([x for x in os.listdir(".") if os.path.isfile(x)]) # OUTPUT: ['.gitignore', 'Readme.md']
+"""
+
+# ##### Serialize #####
+import pickle
+obj = dict(name="Vicent", age=20, score=38)
+print(pickle.dumps(obj)) # OUTPUT: b'\x80\x03}q\x00(X\x04\x00\x00\x00nameq\x01X\x06\x00\x00\x00Vicentq\x02X\x03\x00\x00\x00ageq\x03K\x14X\x05\x00\x00\x00scoreq\x04K&u.'
+reObj = pickle.loads(pickle.dumps(obj))
+print(reObj) # OUTPUT: {'name': 'Vicent', 'age': 20, 'score': 38}
+
+import json
+print(json.dumps(obj)) # OUTPUT: {"name": "Vicent", "age": 20, "score": 38}
+print(json.dumps(["Vicent", "_", "Chen"])) # OUTPUT: ["Vicent", "_", "Chen"]
+
+class Student(object):
+    def __init__(self, name, age, friends):
+        self.name = name
+        self.age = age
+        self.friends = friends
+student = Student("Vicent_Chen", 100, ["V", "Vic", "Vicent"])
+print(json.dumps(student, default=lambda obj: obj.__dict__)) # OUTPUT: {"name": "Vicent_Chen", "age": 100, "friends": ["V", "Vic", "Vicent"]}
+def dict2Student(d):
+    return Student(d["name"], d["age"], d["friends"])
+print(json.loads('{"name": "Vicent_Chen", "age": 100, "friends": ["V", "Vic", "Vicent"]}', object_hook=dict2Student)) # OUTPUT: <__main__.Student object at 0x05E97D50>
+
+# ##### Errors #####
+# file = open("../Readme.md", "r")  # OUTPUT: FileNotFoundError: [Errno 2] No such file or directory: '../Readme.md'
+# print(os.uname()) # OUTPUT: AttributeError: module 'os' has no attribute 'uname'
 
 # -------------------------------------------------------------------------------------
 

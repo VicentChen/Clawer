@@ -1052,6 +1052,11 @@ conn.close()
 # ====================
 
 # ===== Notes =====
+# 协程执行过程：produce send -> consumer yield -> produce send -> consumer yield ...
+# 
+# 异步IO+协程：当一个协程进入等待的时候，EventLoop会自动进行另一个协程
+#
+# 关于yield的理解：yield有让步之意，实际上为将执行权让出，在让出时顺便携带参数/返回值
 # =================
 
 # ##### Coroutine #####
@@ -1079,5 +1084,39 @@ c = consumer()
 produce(c)
 """
 
+# ##### Async io #####
+"""
+import asyncio
+# @asyncio.coroutine
+# def hello():
+#     print("Hello World!")
+#     r = yield from asyncio.sleep(1)
+#     print("Hello again!")
+
+# loop = asyncio.get_event_loop()
+# tasks = [hello(), hello()]
+# loop.run_until_complete(asyncio.wait(tasks))
+# loop.close()
+
+@asyncio.coroutine
+def wget(host):
+    print("wget %s..." % host)
+    connect = asyncio.open_connection(host, 80)
+    reader, writer = yield from connect
+    header = "GET / HTTP/1.0\r\nHost: %s\r\n\r\n" % host
+    writer.write(header.encode("utf-8"))
+    yield from writer.drain()
+    while True:
+        line = yield from reader.readline()
+        if line == b'\r\n':
+            break
+        print("%s header > %s" % (host, line.decode("utf-8").rstrip()))
+    writer.close()
+
+loop = asyncio.get_event_loop()
+tasks = [wget(host) for host in ["www.sina.com.cn", "www.sohu.com", "www.163.com"]]
+loop.run_until_complete(asyncio.wait(tasks))
+loop.close()
+"""
 # -------------------------------------------------------------------------------------
 # Finished, will not update.

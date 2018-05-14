@@ -2,3 +2,4 @@
 dependencies/*
 .idea/*
 test/*
+__pycache__/

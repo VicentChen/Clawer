@@ -16,7 +16,10 @@ class CourseSpider(scrapy.Spider):
     custom_settings = {
         "LOG_LEVEL": "INFO", # log设置为INFO以减少控制台输出信息
         "TERM_CODE": "2017-2018-2-1", # 学期号
-        "TOTAL_COURSES": "5436", # 要获取的课程数，建议人工填写
+        "TOTAL_COURSES": "1", # 要获取的课程数，建议人工填写
+        # "SPIDER_MIDDLEWARES": { # 此处为自定义的爬虫中间件，可用于DEBUG
+        #     "ScuClawer.middlewares.CourseSpiderErrorSavingMiddleware": 1000, # 错误处理
+        # }
     }
 
     def start_requests(self):
@@ -90,27 +93,27 @@ class CourseSpider(scrapy.Spider):
             params["xkch"] = course[headers[0]] # header[0]为课程号
             params["xkxh"] = course[headers[2]] # header[2]为课序号
             time_url = "http://zhjw.scu.edu.cn/kcKbInfoAction.do?" + urlencode(params) # 课表查询URL
-            yield scrapy.Request(url=time_url, callback=self.parse_time, meta=course)
+            yield scrapy.Request(url=time_url, callback=self.parse_time, meta={"course": course, "headers": headers})
         self.logger.info("课程课表解析结束")
 
     # 课表解析
     def parse_time(self, response):
-        course = response.meta # 接收传来的meta
+        course = response.meta["course"] # 接收传来的meta
         selector = scrapy.Selector(response=response)
         table = selector.xpath('//*[@id="user"]/thead/tr[position() >= 2]/td[position() >= 2]/text()').extract()
         for i, item in enumerate(table):
             table[i] = item.strip()
         # 删除字符串 “第一节” “第五节” “第十节”
         del table[0]; del table[28]; del table[63]
-        
+
         # 计算上课时间
         day_table = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
         class_table = ["第一节", "第二节", "第三节", "第四节", "第五节", "第六节", "第七节", "第八节", "第九节", "第十节", "第十一节", "第十二节", "第十三节"]
         course_time = []
         for i, item in enumerate(table):
             if item: # item不为空
-                origin_info = re.search(".*?\((.*?)\)", item).group(1)
-                infos = origin_info.split(",")
+                # 正则表达式可保证即使出现多余括号亦能正常解析，re.S为多行匹配模式
+                infos = re.match(r".*?(..),(.*?),(.*?),(.*?),(.*?)\)", item, re.S).groups()
 
                 day_no = i % 7 # 周 x
                 class_no = i // 7 # 第 x 节

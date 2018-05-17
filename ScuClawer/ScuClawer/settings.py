@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'ScuClawer.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'ScuClawer (+http://www.yourdomain.com)'
+USER_AGENT = 'ScuClawer (+http://www.github.com/VicentChen/Clawer)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -42,7 +42,6 @@ ROBOTSTXT_OBEY = False
 DEFAULT_REQUEST_HEADERS = {
 #   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 #   'Accept-Language': 'en',
-    'User-Agent': 'ScuClawer' # 登陆用UA
 }
 
 # Enable or disable spider middlewares

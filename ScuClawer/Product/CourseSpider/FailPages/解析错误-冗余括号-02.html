@@ -1,0 +1,804 @@
+
+
+
+
+
+<html>
+<base target="_self">
+<head>
+<title>课程课表信息</title>
+<link href="/css/newcss/project.css" rel="stylesheet" type="text/css">
+<link  href="css/style.css" rel=stylesheet type="text/css">
+<script type="text/javascript">
+function closeClick(){
+    window.close();
+}
+
+   function beforePrint(){
+       document.getElementById("btnClose").style.display="none";
+       document.getElementById("btprint").style.display="none";
+   }
+   function afterPrint(){
+       document.getElementById("btnClose").style.display="block";
+       document.getElementById("btprint").style.display="block";
+   }
+
+// 打印
+function printkb(){
+	beforePrint()
+	window.print();	
+	afterPrint()
+}
+</script>
+</head>
+<body topmargin="0" leftmargin="0" rightmargin="0" style="overflow:auto;">
+<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" class="titleTopBg">
+  <tr>
+    <td valign="top"> 
+      <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td valign="top">
+
+<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" class="titleLine">
+  <tr>
+    <td valign="top">
+	<table width="100%"  border="0" cellpadding="0" cellspacing="0" class="title" id="tblHead">
+			<tr>
+					<td width="50%" >
+					<table border="0" align="left" cellpadding="0" cellspacing="0" >
+					
+					<tr>
+					<td>&nbsp;</td>
+					<td valign="middle">&nbsp;<b>课程课表</b>
+					&nbsp;</td>
+					</tr>
+					</table>
+					</td>
+					
+					<td width="50%" >
+					
+						<table border="0" align="left" cellpadding="0" cellspacing="0" width="100%" >
+						<tr>
+						<td>&nbsp;</td>
+						<td width="3">&nbsp;</td>
+	                           <td width="10" align="center">
+	                           <img  src="/img/icon/print.gif" title="打印"
+	                           	onClick="printkb();" style="cursor:hand" id="btprint"></td>
+	                           <td width="3">&nbsp;  </td> 
+							         
+						<td width="5"></td>
+						
+						</tr>
+						</table>
+					
+					</td>
+					</tr>
+			
+		</table>
+			<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"  >
+					<tr>
+					   <td class="Linetop"></td>
+					</tr>
+			</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fieldsettop">
+    <tr> 
+        <td> 
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr class="infoBg2"> 
+    <td class="infoBg1">&nbsp;</td>
+    <td><table border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td class="legend">基本信息</td>
+        </tr>
+      </table></td>
+    <td class="infoBg3">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td class="infoBg4">&nbsp;</td>
+    <td>
+    
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="titleTop3">
+											<tr>
+												
+												<td valign="top"> 
+													<table border="0"  cellpadding="0" cellspacing="0">
+														<tr> 
+															<td width="80" class="fieldName"> 
+																学年学期:</td>
+															<td width="3">&nbsp;</td>
+															<td> </td>
+														</tr>
+														<tr> 
+															<td width="80" class="fieldName"> 
+																课程名称:</td>
+															<td width="3">&nbsp;</td>
+															<td></td>
+														</tr>
+													</table></td>
+											</tr>
+										</table>
+	</td>
+    <td class="infoBg5">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="infoBg6">&nbsp;</td>
+    <td class="infoBg2">&nbsp;</td>
+    <td class="infoBg8">&nbsp;</td>
+  </tr>
+</table> 
+	   </td>
+	</tr>
+</table>
+
+
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fieldsettop">
+    <tr> 
+        <td> 
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr class="infoBg2"> 
+    <td class="infoBg1">&nbsp;</td>
+    <td><table border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td class="legend">课表一览</td>
+        </tr>
+      </table></td>
+    <td class="infoBg3">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td class="infoBg4">&nbsp;</td>
+    <td>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="titleTop2">
+					 <tr>
+					  <td class="pageAlign">
+					   <table cellpadding="0" width="100%" class="displayTag" cellspacing="0" border="1" id="user">
+					    <thead>
+							<tr>
+	    <td width="4%" class="sortable">&nbsp;</td>
+	    <td width="12%" class="sortable">&nbsp;</td>
+	    <td width="12%" class="sortable"><div align="center">星期一</div></td>
+	    <td width="12%" class="sortable"><div align="center">星期二</div></td>
+	    <td width="12%" class="sortable"><div align="center">星期三</div></td>
+	    <td width="12%" class="sortable"><div align="center">星期四</div></td>
+	    <td width="12%" class="sortable"><div align="center">星期五</div></td>
+	    <td width="12%" class="sortable"><div align="center">星期六</div></td>
+	    <td width="12%" class="sortable"><div align="center">星期日</div></td>	    
+	</tr>
+	 
+	 	
+
+	<tr bgcolor="#FFFFFF">
+	    <td colspan="9"><p align="center" class="td2 style5"><strong>上 午</strong></p></td>
+	</tr>
+	
+		<tr bgcolor="#FFFFFF">
+		
+		<td width="4%" rowspan="4">&nbsp;<p class="style4">上午</p></td>
+		
+	 	<td width="12%" >第一节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第二节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第三节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第四节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+			<tr bgcolor="#FFFFFF">
+			    <td colspan="9">&nbsp;<p align="center" class="td2 style5"><strong>午 休</strong></p></td>
+			</tr>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+		<td width="4%" rowspan="5">&nbsp;<p class="style4">下午</p></td>
+		
+	 	<td width="12%" >第五节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+		    残疾心理学(双语)_01(华西,临医楼,病房,杨霖* ,1-12周上)
+		
+			
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第六节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+		    残疾心理学(双语)_01(华西,临医楼,病房,杨霖* ,1-12周上)
+		
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第七节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+		    残疾心理学(双语)_01(华西,临医楼,病房,杨霖* ,1-12周上)
+		
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第八节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+		    残疾心理学(双语)_01(华西,临医楼,病房,杨霖* ,1-12周上)
+		
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第九节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+			<tr bgcolor="#FFFFFF">
+			    <td colspan="9">&nbsp;<p align="center" class="td2 style5"><strong>晚 饭</strong></p></td>
+			</tr>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+		<td width="4%" rowspan="10">&nbsp;<p class="style4">晚上</p></td>
+		
+	 	<td width="12%" >第十节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第十一节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第十二节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+		<tr bgcolor="#FFFFFF">
+		
+	 	<td width="12%" >第十三节</td>
+	 	
+	 	  
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+		      <td width="12%" valign="top">
+			&nbsp;
+			
+			</td>
+			
+
+	
+	 
+     </td>
+	</tr>
+	
+</table>
+</td>
+</tr>
+</table>
+	</td>
+    <td class="infoBg5">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="infoBg6">&nbsp;</td>
+    <td class="infoBg2">&nbsp;</td>
+    <td class="infoBg8">&nbsp;</td>
+  </tr>
+</table> 
+	   </td>
+	</tr>
+</table>
+
+      </td>
+
+  </tr>
+</table>
+
+                </td>
+                <td width="10"  valign="top" background="/img/info/bg3_.jpg">
+                <img src="/img/info/bg33.jpg" ></td>
+              </tr>
+              <tr> 
+                <td height="10"  valign="top" background="/img/info/bg2_.jpg">
+                <img src="/img/info/bg2.jpg" ></td>
+                <td width="10"  valign="top"><img src="/img/info/bg4.jpg" ></td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr height="22">
+          <td>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+               <tr> 
+                  <td>&nbsp;</td>
+                  <td width="80">
+                     <img src="/img/zh/close.gif" border="0" onclick="return closeClick()" id="btnClose" class="buttonImg" title="关闭">
+                  </td>
+                  <td width="10">&nbsp;</td>
+               </tr>
+            </table>
+           </td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+
+
+
+</body></html>

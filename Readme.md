@@ -30,6 +30,20 @@
   - 必须首先进行GET请求教室查询网页，然后才能够成功POST访问，否则会返回`500 Internal Server Error`，具体错误为`NullPointerException`，可能与教务处网页中的`history`有关
   - 查询时间可能稍长，log中未报错即为正常运行
 
+## Utils - 爬虫辅助工具
+
+### **`simple-deskewing`**
+ - 简单的图像旋转矫正，适用于白底黑字不粘连/重合的验证码
+ - 原理: 计算图片每一列黑色像素值，非0部分即为文字，进而分割图片为若干部分；为每一部分计算图片中文字的包围盒及其倾斜角度，最后旋转图片并拼接
+ - 作用: 旋转后提升tesseract识别率
+ - 示例: 
+  <figure>
+      <img src="doc/img/origin.jpg">
+      <img src="doc/img/deskewing.jpg">
+  </figure> 
+
 ## 环境与工具
  - **Python 3**
  - VSCode
+
+ [1]: doc/img/origin

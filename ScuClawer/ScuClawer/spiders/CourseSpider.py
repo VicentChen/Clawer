@@ -113,7 +113,7 @@ class CourseSpider(scrapy.Spider):
         for i, item in enumerate(table):
             if item: # item不为空
                 # 正则表达式可保证即使出现多余括号亦能正常解析，re.S为多行匹配模式
-                infos = re.match(r".*?(..),(.*?),(.*?),(.*?),(.*?)\)", item, re.S).groups()
+                infos = re.match(r".*?\((..),(.*?),(.*?),(.*?),(.*?)\)", item, re.S).groups()
 
                 day_no = i % 7 # 周 x
                 class_no = i // 7 # 第 x 节

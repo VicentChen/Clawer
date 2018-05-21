@@ -30,6 +30,17 @@
   - 必须首先进行GET请求教室查询网页，然后才能够成功POST访问，否则会返回`500 Internal Server Error`，具体错误为`NullPointerException`，可能与教务处网页中的`history`有关
   - 查询时间可能稍长，log中未报错即为正常运行
 
+## HereisClawer - [Hereis][2]信息爬虫
+ 隶属于项目[Hereis][2]的信息爬虫
+
+ ### QunarSpider - 去哪儿热门景点爬虫
+ - 网页地址: http://piao.qunar.com/ticket/list.htm?keyword=%E7%83%AD%E9%97%A8%E6%99%AF%E7%82%B9&region=&from=mpl_search_suggest&sort=pp&page=1
+ - 获取数据: 景点GPS，简介，介绍，图片等
+ - 格式: JSON
+ - 示例:
+   - `HereisClawer/Product/QunarSpider/spot.json`
+   - `HereisClawer/Product/QunarSpider/spot.jpg`
+  - 注意事项: 爬取时**注意控制速度**，否则容易被封IP
 ## Utils - 爬虫辅助工具
 
 ### **`simple-deskewing`**
@@ -47,3 +58,4 @@
  - VSCode
 
  [1]: doc/img/origin
+ [2]: https://github.com/CicadaTalk/hereis

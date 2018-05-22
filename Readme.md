@@ -41,6 +41,7 @@
    - `HereisClawer/Product/QunarSpider/spot.json`
    - `HereisClawer/Product/QunarSpider/spot.jpg`
   - 注意事项: 爬取时**注意控制速度**，否则容易被封IP
+ ### 餐饮信息 - 通过地图API获取
 ## Utils - 爬虫辅助工具
 
 ### **`simple-deskewing`**

@@ -58,7 +58,8 @@ class QunarSpider(scrapy.Spider):
         brief_intro = selector.xpath('/html/body/div[2]/div[2]/div[2]/div[2]/text()').extract_first()
         intro = selector.xpath('//*[@id="mp-charact"]/div[1]/div[1]/div[1]/p/text()').extract_first()
         imgs = selector.xpath('//*[@id="mp-charact"]/div[2]/div[1]/div/img/@src').extract() 
-        spot["简介"] = brief_intro; spot["介绍"] = intro; spot["图片"] = imgs
+        tips = selector.xpath('//*[@id="mp-charact"]/div[4]/div/div/div[2]/p[position() >= 1]/text()').extract()
+        spot["简介"] = brief_intro; spot["介绍"] = intro; spot["图片"] = imgs; spot["小贴士"] = tips
         
         with open("Product/QunarSpider/spots.json", "a", encoding="utf-8") as file:
             file.write(json.dumps(spot, ensure_ascii=False) + ",\n")

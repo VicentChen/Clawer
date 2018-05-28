@@ -41,7 +41,13 @@
    - `HereisClawer/Product/QunarSpider/spot.json`
    - `HereisClawer/Product/QunarSpider/spot.jpg`
   - 注意事项: 爬取时**注意控制速度**，否则容易被封IP
- ### 餐饮信息 - 通过地图API获取
+
+ ### MeituanSpider - 美团附近美食爬虫
+  - 网页地址(手机版): https://meishi.meituan.com/i/?ci=59&stid_b=1
+  - 获取数据: 附近餐厅名称，GPS，团购菜单等
+  - 格式: JSON
+  - 示例: `HereisClawer/Product/MeituanSpider/`
+
 ## Utils - 爬虫辅助工具
 
 ### **`simple-deskewing`**

@@ -7,6 +7,7 @@
 import scrapy
 import json
 import time
+import hashlib
 from HereisClawer.items import SenicSpotItem
 
 class QunarSpider(scrapy.Spider):
@@ -70,19 +71,14 @@ class QunarSpider(scrapy.Spider):
         spot["简介"] = brief_intro; spot["介绍"] = intro; spot["图片"] = imgs; spot["小贴士"] = tips
 
         # 获取图片名
-        origin_url = imgs[0]
-        bg_img_name_start_pos = origin_url.rfind("/") + 1
-        bg_img_name_end_pos   = origin_url.find("_")
-        bg_img_url = origin_url; spot["背景"] = origin_url[bg_img_name_start_pos:bg_img_name_end_pos]
-
-        with open("Product/QunarSpider/spots.json.bak", "a", encoding="utf-8") as file:
-            file.write(json.dumps(spot, ensure_ascii=False) + ",\n")
+        bg_img_url = imgs[0]; 
+        spot["背景"] = time.strftime("%Y/%m/%d/") + hashlib.sha1(bg_img_url.encode("utf-8")).hexdigest() + ".jpg"
         
         yield SenicSpotItem(
             name = spot["名称"], category = "scenic",
             lng = spot["经度"], lat = spot["纬度"],
             brief_intro = spot["简介"], intro = spot["介绍"],
-            bg_img = time.strftime("%Y/%m/%d/") + spot["背景"],
+            bg_img = spot["背景"],
             warning = json.dumps(spot["小贴士"], ensure_ascii=False),
             image_urls = [bg_img_url]
         )

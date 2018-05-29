@@ -7,15 +7,23 @@
 import scrapy
 import json
 import re
+import time
+import hashlib
 from urllib.parse import urlencode
+from HereisClawer.items import RestaurantItem
 
 class MeituanSpider(scrapy.Spider):
     name = "MeituanSpider"
 
     custom_settings = {
-        "REST_NUMBER" : "10", # 每次爬取条数，
+        "REST_NUMBER" : "15", # 每次爬取条数，
         "UUID" : "unknown", # 美团分配的UUID，爬取过程中会自动获取
-        "DOWNLOAD_DELAY": 0.5, # 下载速度控制
+        "DOWNLOAD_DELAY": 1.5, # 下载速度控制
+        "IMAGES_STORE" : "Product/MeituanSpider/images", # 图片保存路径
+        "ITEM_PIPELINES" : {
+            'scrapy.pipelines.images.ImagesPipeline': 1,
+            'HereisClawer.pipelines.MeituanSpiderPipeline' : 500
+        }
     }
 
     def start_requests(self):
@@ -64,8 +72,10 @@ class MeituanSpider(scrapy.Spider):
             rest_list = json.loads(resposne.text)["data"]["poiList"]["poiInfos"]
             self.logger.info("餐厅列表获取完成")
             self.logger.info("获取餐厅数据 %d 条" % len(rest_list))
-        except:
-            self.logger.info("餐厅列表获取失败")
+        except BaseException as e:
+            self.logger.error(e)
+            self.logger.error("餐厅列表获取失败")
+            return
         
         # 菜谱初始URL
         deallist_url = 'http://meishi.meituan.com/i/api/poi/deallist'
@@ -86,13 +96,10 @@ class MeituanSpider(scrapy.Spider):
         for rest in rest_list:
             rest_obj = {
                 "餐厅名": rest["name"],
-                "经度": rest["lat"],
-                "纬度": rest["lng"],
+                "经度": rest["lng"],
+                "纬度": rest["lat"],
                 "图片": rest["frontImg"],
             }
-
-            with open("Product/MeituanSpider/restaurant.json", "a", encoding="utf-8") as file:
-                file.write(json.dumps(rest_obj, ensure_ascii=False) + ",\n")
             
             poiid = rest["poiid"] # 地点ID
             ctpoi = rest["ctPoi"] # 未知参数，但请求时需要使用
@@ -101,7 +108,7 @@ class MeituanSpider(scrapy.Spider):
             # 组建查询数据
             query_data["originUrl"] = origin_url
             query_data["poiId"] = poiid
-            
+
             yield scrapy.FormRequest(url=deallist_url, formdata=query_data, meta=rest_obj, callback=self.parse_deallist)
     
     def parse_deallist(self, response):
@@ -111,11 +118,28 @@ class MeituanSpider(scrapy.Spider):
             {
                 "名称": food["title"],
                 "价格": food["price"],
-                "图片": food["imgUrl"]
+                "图片": "http:" + food["imgUrl"],
+                "类别": "default",
             }
             for food in food_list
         ]
         rest_obj["菜谱"] = food_list_obj
+        
+        # 构建待下载图片列表
+        auto_add_scheme = lambda x : "http:" + x if x.startswith("//") else x
+        img_list = [ auto_add_scheme(food["图片"]) for food in food_list_obj ]
+        img_list.append(auto_add_scheme(rest_obj["图片"]))
 
-        with open("Product/MeituanSpider/food.json", "a", encoding="utf-8") as file:
-            file.write(json.dumps(rest_obj, ensure_ascii=False) + ",\n")
+        # 更正图片名称
+        rest_obj["图片"] = time.strftime("%Y/%m/%d/") + hashlib.sha1(rest_obj["图片"].encode("utf-8")).hexdigest() + ".jpg"
+        for food in food_list_obj:
+            food["图片"] = time.strftime("%Y/%m/%d/") + hashlib.sha1(food["图片"].encode("utf-8")).hexdigest() + ".jpg"
+
+        yield RestaurantItem(
+            name = rest_obj["餐厅名"], category = "restaurant",
+            lng = rest_obj["经度"], lat = rest_obj["纬度"],
+            brief_intro = rest_obj["餐厅名"], # TODO: 餐厅介绍
+            bg_img = rest_obj["图片"],
+            food_list = rest_obj["菜谱"],
+            image_urls = img_list
+        )

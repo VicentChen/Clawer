@@ -64,7 +64,7 @@ class QunarSpiderPipeline(object):
             INSERT INTO scenic_spot
                 (spot_id, intro, warning)
             VALUES
-                ('%s', '%s', '%s');
+                (%s, '%s', '%s');
         ''' % (
             spot_id, item["intro"], item["warning"]
         ))
@@ -77,3 +77,81 @@ class QunarSpiderPipeline(object):
     def __inc_scen(self):
         with self.scen_lock:
             self.scen_counter += 1
+
+class MeituanSpiderPipeline(object): 
+
+    def __init__(self, mysql_conf):
+        self.mysql_conf = mysql_conf
+        self.spot_counter = 0; self.spot_lock = threading.Lock()
+        self.menu_counter = 0; self.menu_lock = threading.Lock()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            mysql_conf = crawler.settings.get("MYSQL_CONF")
+        )
+    
+    def open_spider(self, spider):
+        try:
+            self.conn = mysql.connector.connect(**self.mysql_conf)
+            self.cursor = self.conn.cursor()
+            spider.logger.info("MySQL连接成功")
+        except TypeError as e:
+            spider.logger.error("MySQL配置错误")
+        except mysql.connector.Error as e:
+            spider.logger.error("MySQL连接失败")
+            spider.logger.error(e)
+    
+    def process_item(self, item, spider):
+        # 插入地点至数据库
+        self.cursor.execute('''
+            INSERT INTO spot
+                (gps_lng, gps_lat, name, brief_intro, bg_img, category)
+            VALUES
+                (%f, %f, '%s', '%s', '%s', '%s');
+        ''' % (
+            item["lng"], item["lat"],
+            item["name"], item["brief_intro"],
+            item["bg_img"], item["category"]
+        ))
+        # 获取插入的地点ID
+        spot_id = self.cursor.lastrowid
+        self.conn.commit(); self.__inc_spot()
+
+        # 插入餐厅
+        self.cursor.execute('''
+            INSERT INTO restaurant
+                (spot_id)
+            VALUES
+                (%s);
+        ''' % spot_id)
+        self.conn.commit()
+
+        # 插入菜单
+        for food in item["food_list"]:
+            self.cursor.execute('''
+                INSERT INTO menu
+                    (price, category, name, img_path, spot_id)
+                VALUES
+                    (%f, '%s', '%s', '%s', %s);
+            ''' % (
+                food["价格"], food["类别"], 
+                food["名称"], food["图片"],
+                spot_id
+            ))
+        self.conn.commit(); self.__inc_menu()
+
+    def close_spider(self, spider):
+        spider.logger.info("插入餐厅数据 %d 条" % self.spot_counter)
+        spider.logger.info("插入菜谱数据 %d 条" % self.menu_counter)
+        self.cursor.close()
+        self.conn.close()
+        spider.logger.info("关闭MySQL数据库")
+    
+    def __inc_spot(self):
+        with self.spot_lock:
+            self.spot_counter += 1
+    
+    def __inc_menu(self):
+        with self.menu_lock:
+            self.menu_counter += 1

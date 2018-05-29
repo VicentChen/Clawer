@@ -6,13 +6,21 @@
 
 import scrapy
 import json
+import time
+from HereisClawer.items import SenicSpotItem
 
 class QunarSpider(scrapy.Spider):
     name = "QunarSpider"
 
     custom_settings = {
         "LOG_LEVEL": "INFO", # log设置为INFO以减少控制台输出信息
-        "TOTAL_PAGES" : 100, # 爬取页数
+        "TOTAL_PAGES" : 1, # 爬取页数
+        "DOWNLOAD_DELAY" : 1.5, # 爬取速率
+        "IMAGES_STORE" : "Product/QunarSpider/images", # 图片保存路径
+        "ITEM_PIPELINES" : {
+            'scrapy.pipelines.images.ImagesPipeline': 1,
+            'HereisClawer.pipelines.QunarSpiderPipeline' : 500
+        }
     }
 
     def start_requests(self):
@@ -41,7 +49,7 @@ class QunarSpider(scrapy.Spider):
                 "名称": spot_names[i],
                 "经度": float(spot_gps[i].split(",")[0]),
                 "纬度": float(spot_gps[i].split(",")[1]),
-                "背景": spot_bgs[i],
+                # "背景": spot_bgs[i], # 背景图片清晰度不足，不建议使用
             }
             for i in range(len(spot_gps))
         ]
@@ -57,9 +65,24 @@ class QunarSpider(scrapy.Spider):
         # 获取简介，介绍，景点图片
         brief_intro = selector.xpath('/html/body/div[2]/div[2]/div[2]/div[2]/text()').extract_first()
         intro = selector.xpath('//*[@id="mp-charact"]/div[1]/div[1]/div[1]/p/text()').extract_first()
-        imgs = selector.xpath('//*[@id="mp-charact"]/div[2]/div[1]/div/img/@src').extract() 
+        imgs = selector.xpath('//*[@id="mp-slider-content"]/div[1]/img/@src').extract()
         tips = selector.xpath('//*[@id="mp-charact"]/div[4]/div/div/div[2]/p[position() >= 1]/text()').extract()
         spot["简介"] = brief_intro; spot["介绍"] = intro; spot["图片"] = imgs; spot["小贴士"] = tips
-        
-        with open("Product/QunarSpider/spots.json", "a", encoding="utf-8") as file:
+
+        # 获取图片名
+        origin_url = imgs[0]
+        bg_img_name_start_pos = origin_url.rfind("/") + 1
+        bg_img_name_end_pos   = origin_url.find("_")
+        bg_img_url = origin_url; spot["背景"] = origin_url[bg_img_name_start_pos:bg_img_name_end_pos]
+
+        with open("Product/QunarSpider/spots.json.bak", "a", encoding="utf-8") as file:
             file.write(json.dumps(spot, ensure_ascii=False) + ",\n")
+        
+        yield SenicSpotItem(
+            name = spot["名称"], category = "scenic",
+            lng = spot["经度"], lat = spot["纬度"],
+            brief_intro = spot["简介"], intro = spot["介绍"],
+            bg_img = time.strftime("%Y/%m/%d/") + spot["背景"],
+            warning = json.dumps(spot["小贴士"], ensure_ascii=False),
+            image_urls = [bg_img_url]
+        )

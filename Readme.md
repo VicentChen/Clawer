@@ -60,8 +60,6 @@
       <img src="doc/img/deskewing.jpg">
   </figure> 
 
-## 规范
-
 ### 分页爬取
 分页爬取通过配置起始页、爬取页数实现，配置位置为`custom_settings`
  - 起始页: `START_PAGE`

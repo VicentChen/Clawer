@@ -4,3 +4,4 @@ dependencies/*
 test/*
 __pycache__/
 images/
+Private/

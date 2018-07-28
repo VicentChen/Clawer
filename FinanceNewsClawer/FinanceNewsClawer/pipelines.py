@@ -52,7 +52,7 @@ class PedailySpiderPipeline(object):
             INSERT INTO news_detail
                 (title, preview_image, time, content)
             VALUES
-                ("%s", "%s", %s, "%s");
+                (%s, %s, %s, %s);
         ''', (
             item["title"], item["preview_image"], item["time"], item["content"]
         ))

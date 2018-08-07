@@ -48,6 +48,9 @@
   - 格式: JSON
   - 示例: `HereisClawer/Product/MeituanSpider/`
 
+## VDayClawer
+我感兴趣的每日咨询爬虫
+
 ## Utils - 爬虫辅助工具
 
 ### **`simple-deskewing`**
@@ -59,11 +62,6 @@
       <img src="doc/img/origin.jpg">
       <img src="doc/img/deskewing.jpg">
   </figure> 
-
-### 分页爬取
-分页爬取通过配置起始页、爬取页数实现，配置位置为`custom_settings`
- - 起始页: `START_PAGE`
- - 总页数: `TOTAL_PAGE`
 
 ## 环境与工具
  - **Python 3**

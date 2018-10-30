@@ -1,9 +1,5 @@
 # Clawer
 
-## Learn
- - `gramma.py` - Python基本语法
- - `scrapy/` - scrapy基本用法
-
 ## ScuClawer - 基于Scrapy框架的川大网站爬虫
  - 使用方法：进入`ScuClawer`目录下`scrapy crawl spidername`，"spidername"为下列爬虫名字
 
@@ -48,8 +44,6 @@
   - 格式: JSON
   - 示例: `HereisClawer/Product/MeituanSpider/`
 
-## VDayClawer
-我感兴趣的每日咨询爬虫
 
 ## Utils - 爬虫辅助工具
 
@@ -62,6 +56,10 @@
       <img src="doc/img/origin.jpg">
       <img src="doc/img/deskewing.jpg">
   </figure> 
+
+## Learn
+ - `gramma.py` - Python基本语法
+ - `scrapy/` - scrapy基本用法
 
 ## 环境与工具
  - **Python 3**

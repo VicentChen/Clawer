@@ -68,7 +68,7 @@ shellescape==3.4.1
 six==1.11.0
 tornado==5.0.2
 torndsession==1.1.5.1
-Twisted==17.9.0
+Twisted==19.7.0
 urllib3==1.22
 w3lib==1.19.0
 Werkzeug==0.15.3

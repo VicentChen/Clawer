@@ -69,7 +69,7 @@ six==1.11.0
 tornado==5.0.2
 torndsession==1.1.5.1
 Twisted==19.7.0
-urllib3==1.24.2
+urllib3==1.26.5
 w3lib==1.19.0
 Werkzeug==0.15.3
 wrapt==1.10.11

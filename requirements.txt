@@ -54,7 +54,7 @@ pypiwin32==223
 pytesseract==0.2.0
 python-dateutil==2.7.2
 pytz==2018.4
-pywin32==223
+pywin32==301
 PyYAML==5.1
 queuelib==1.5.0
 requests==2.20.0
